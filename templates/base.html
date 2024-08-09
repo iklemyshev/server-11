@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="{{url_for('static', filename='js/jquery-ui.css')}}">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/bulma.min.css')}}">
+        
+        <script src="{{url_for('static', filename='js/jquery-3.6.0.min.js')}}"></script>
+        <script src="{{url_for('static', filename='js/jquery-ui.js')}}"></script>
+        {% block head %}{% endblock %}
+        {% block title %}{% endblock %}
+    </head>
+    <body>
+        <div class="columns">
+            <div class="column is-8 is-offset-2">
+                <h1 class="title is-1">SERVER-11</h1><span class="tag is-info">rev. 1</span>
+                <hr/>
+                <div class="box">
+                    <p class="subtitle is-4">Server Control</p>
+                    <button class="button is-primary" id="btn-app-start">Start/restart Main App</button>
+                    <button class="button is-danger" id="btn-app-stop" disabled>Stop Main App</button>
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </body>
+    <script>
+        $('#btn-app-start').on('click', function() {
+            var url = "{{ url_for('c_restart') }}";
+            $.ajax({
+                type: 'GET',
+                // contentType: 'application/json',
+                url: url,
+                success: function (response) {
+                    console.log(response);
+
+                    $('#btn-app-stop').removeAttr('diabled')
+
+                    location.reload();
+                },
+                error: function (xhr, status, err) {
+                    console.log(err);
+                    alert('Error restarting application!');
+                }
+            });
+        });
+        $('#btn-app-stop').on('click', function() {
+            var url = "{{ url_for('c_stop') }}";
+            $.ajax({
+                type: 'GET',
+                // contentType: 'application/json',
+                url: url,
+                success: function (response) {
+                    console.log(response);
+
+                    $('#btn-app-stop').attr('diabled')
+
+                    location.reload();
+                },
+                error: function (xhr, status, err) {
+                    console.log(err);
+                    alert('Error stopping application!');
+                }
+            });
+        });
+    </script>
+</html>
